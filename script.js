@@ -369,7 +369,7 @@ function addImageSegma() {
 
 function addImageCoda() {
     const img = document.createElement('img');
-    img.src = './Imagenes/coda.png'; // URL de ejemplo, cambiar por la ruta de la imagen deseada
+    img.src = './Imagenes/Coda.png'; // URL de ejemplo, cambiar por la ruta de la imagen deseada
     img.classList.add('image');
 
     let content = document.getElementById('content1');
