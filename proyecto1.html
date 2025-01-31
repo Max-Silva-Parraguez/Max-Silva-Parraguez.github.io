@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Para hacer la Web Responsive-->
+    <title>DATAMART CON SSIS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-------------------ESTILOS CSS PARA CLASES DE IMAGENES A TENER EN CUENTA ------------------------------------->
+<!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es normal-->
+<!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es muy grande-->
+<!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen no se ve bien en el contenido en la pagina usando la clase project-proyectos-->
+
+<body>
+    <div class="container proyecto">
+        <header>
+            <h1>CREACIÓN DE UN DATAMART DE ACCIDENTES DE TRÁNSITO EN EE.UU. (2016 - 2023)</h1>
+            <br>
+        </header>
+        <main>
+            <section id="project-details">
+                <h2>I. ENTENDIENDO LOS DATOS Y EL PROYECTO</h2>
+                <p>
+                    Los datos se obtuvieron de registros de accidentes automovilísticos a nivel de todo EE.UU. que
+                    abarcan 49
+                    estados. La
+                    data está comprendida entre febrero del 2016 hasta marzo del 2023. Es un .csv que contiene
+                    aproximadamente 7,7 millones de registros de accidentes.
+                    <br>
+                    Este proyecto consistió en que a partir de los datos del .CSV, se hizo todo el proceso de ETL,
+                    extracción de los Datos,
+                    la Transformación de los mismos, y la Carga a un destino final que es un DataMart, el cual es un
+                    esquema de ESTRELLA.
+                    <br>
+                    <br>
+                    La fuente de datos se tomó de KAGGLE:
+                    <a href="https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents"
+                        target="_blank">https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents</a>
+                    <br>
+                    <br>
+                    Proceso que se realizó fue:
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/0.png"
+                        alt="Imagen 0 del Proyecto" class="project-proyectos">
+                    <!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, cuando el tamaño original de la imagen es normal-->
+                    <br>
+                    El .csv en mención contiene 46 columnas las cuales, cada una se detallan a continuación:
+
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/1.png"
+                    alt="Imagen 1 del Proyecto" class="project-proyectos">
+                <h2>II. PRIMERO: DE CSV a LOAD_ACCIDENTS</h2>
+                <p>
+                    Debido a que los datos los tenemos en un CSV con un tamaño de 3GB, y con un aproximado de 7,7
+                    millones de registros, lo ideal sería pasarlo a una tabla de Carga en SQL Server, esta tabla actuará
+                    como un primer almacén donde se guardarán los datos del csv, que permite manejar los datos de forma
+                    más eficiente, controlada y segura antes de ser cargados en una base de datos Staging (esta BD será
+                    el segundo almacén intermediario entre los datos originales y el Datamart) antes de ser pasadas al
+                    DataMart. Si bien es cierto, se hará dos pasos adicional, pero esto asegurará que el destino final
+                    reciba datos limpios, consistentes y listos para ser usados en análisis.
+                    <br>
+                    Creando Base de Datos LOAD_ACCIDENTS y Tabla L_ACCIDENTS:
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/2.png"
+                        alt="Imagen 2 del Proyecto" class="project-proyectos-pequeño">
+                    <!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, cuando el tamaño original de la imagen es muy grande-->
+                </p>
+                <p>
+                    En el primer proyecto en SSIS lo que haremos es establecer la conexión de origen de datos al .CSV,
+                    luego convertimos los datos y, por último, establecemos como destino la Base de Datos
+                    LOAD_ACCIDENTS
+                    en la tabla L_ACCIDENTS.
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/3.png"
+                    alt="Imagen 3 del Proyecto" class="project-proyectos thumbnail">
+                <!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, cuando una imagen no se ve bien en el contenido en la pagina usando la clase project-proyectos-->
+                <h2>III. SEGUNDO: DE LOAD_ACCIDENTS a STAGING_ACCIDENTS (LIMPIEZA DE DATOS)</h2>
+                <p>
+                    En el segundo proyecto en SSIS lo que haremos es eliminar duplicados, convertir datos,
+                    formateo de datos, tratando registros sin datos o Nulos y normalizar datos.
+                    <br>
+                    Los pasos realizados son en primer lugar establecer un origen con la tabla L_ACCIDENTS, luego empleé
+                    componentes para la Limpieza de los Datos:<br>
+                    <br>
+                    - Sort<br>
+                    - Data Conversion<br>
+                    - Derive Column<br>
+                    - Lookup<br>
+                </p>
+                <p>Finalmente establecí un Destino a la Base de Datos STAGING_ACCIDENTS en la tabla S_ACCIDENTS.
+                    <br>
+                    La Base de Datos y la Tabla son:
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/4.png"
+                    alt="Imagen 4 del Proyecto" class="project-proyectos-pequeño">
+                <p>
+                    Finalmente se ejecuta el Proyecto:
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/5.png"
+                    alt="Imagen 5 del Proyecto" class="project-proyectos thumbnail">
+                <h2>IV. TERCERO: DE STAGING_ACCIDENTS A DATAMART_ACCIDENTS</h2>
+                <p>
+                    El esquema del Datamart será el de Estrella (Se adjunta el modelo en la imagen), en primer lugar,
+                    crearé la base de datos DATAMART_ACCIDENTS, y continuaré creando las dimensiones y la tabla hechos.
+                    Luego crearé también una tabla para cada dimensión dentro de BD STAGING_ACCIDENTS la cual guardará
+                    los registros modificados de cada dimensión, por ello, en el poblamiento de cada dimensión se tendrá
+                    2 orígenes de datos, el primero para sacar los datos de la tabla S_ACCIDENTS y el segundo de la
+                    Dimensión correspondiente que poblaremos, esto con la finalidad de comparar registros y guardar los
+                    registros modificados en las tablas mencionadas anteriormente en STAGING_ACCIDENTS.
+                    <br>
+                    <br>
+                    El DataMart es el siguiente:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/6.png"
+                    alt="Imagen 6 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <br>
+                <h3>Poblando Dimensión Location</h3>
+                <p>
+                    Esta Dimensión guardará los registros correspondientes a todo lo relacionado a la UBICACIÓN de cada
+                    Accidente.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/7.png"
+                    alt="Imagen 7 del Proyecto" class="project-proyectos">
+                <br>
+                <p>El Stage MD5 y el Data Mart MD5, sirve para poder validar si los registros que se insertarán son
+                    Nuevos o Modificados.</p>
+                <br>
+                <h3>Poblando Dimensión Weather</h3>
+                <p>
+                    Esta Dimensión guardará los registros correspondientes a todo lo relacionado al CLIMA en el momento
+                    que sucedió el Accidente.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/8.png"
+                    alt="Imagen 8 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Poblando Dimensión Road Features</h3>
+                <p>
+                    Esta Dimensión guardará los registros correspondientes a todo lo relacionado a las CARACTERÍSTICAS
+                    DE LA CARRETERA en el momento del Accidente.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/9.png"
+                    alt="Imagen 9 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Poblando Dimensión Description Accidents</h3>
+                <p>
+                    Esta Dimensión guardará la DESCRIPCION que se indicó en el momento del Accidente, es decir, los
+                    motivos que conllevaron a producirse el accidente.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/10.png"
+                    alt="Imagen 10 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Poblando Dimensión Time</h3>
+                <p>
+                    Esta Dimensión guardará las FECHAS y todo lo relacionado al tiempo (fecha y hora) del Accidente.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/11.png"
+                    alt="Imagen 11 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Poblando Tabla Hechos</h3>
+                <p>
+                    Esta es la Tabla que interactúa con las dimensiones.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/12.png"
+                    alt="Imagen 12 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>---- Proyecto Principal y Envío de Correo ----</h3>
+                <p>
+                    En este último paso, crearé un Proyecto llamado PRINCIPAL-MASTER, el cuál será el encargado de
+                    Limpiar las Tablas (Considerándolo que será la primera vez que se pasarán los datos y como tuve data
+                    de prueba, lo prefiero borrar y ejecutarlo todo desde el inicio), luego ejecutará cada Poblado de
+                    Dimensión y de la tabla Hechos, y al final me enviará un correo indicando si todo se realizó
+                    correctamente. Es importante mencionar que el envío de correo lo realicé mediante el componente de
+                    Tarea Script, debido a que se hará de manera local, en un ambiente de producción, si se utilizaría
+                    el
+                    Componente de Tarea Enviar Correo, utilizando un servidor de correo y su respectiva configuración.
+                    <br>
+                    - Ejecutamos todo el proyecto:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/13.png"
+                    alt="Imagen del Proyecto 13" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    - Se observa que todo se ejecutó correctamente, y me llegó un correo indicando que
+                    todo el proceso terminó exitosamente:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/14.png"
+                    alt="Imagen del Proyecto 14" class="project-proyectos thumbnail">
+                <br>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/DataMart Accidents/15.png"
+                    alt="Imagen del Proyecto 15" class="project-proyectos thumbnail">
+                <br>
+
+            </section>
+
+            <div class="descargar">
+                <section id="descarga">
+                    <h2>Si desea revisar el proyecto completo, se encuentra en mi repositorio de GitHub:</h2>
+                    <br>
+                    <div class="descarga-item">
+                        <button type="button" class="boton-GitHub" onclick="proyectoGitHub1()">
+                            <img src="./Imagenes/Principal/github.png" alt="Descargar archivo"> Proyecto en GitHub
+                        </button>
+                        <button type="button" class="boton-descargar" onclick="descargarProyecto1()">
+                            <img src="./Imagenes/Principal/boton_descargar.png" alt="Descargar archivo"> Descarga
+                            Directa
+                        </button>
+                    </div>
+
+                </section>
+            </div>
+
+
+        </main>
+    </div>
+    <!-- Ventana modal para el visor de imagen -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
