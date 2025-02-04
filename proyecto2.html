@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Para hacer la Web Responsive-->
+    <title>TIEMPO REAL: API -> SQL Server</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-------------------ESTILOS CSS PARA CLASES DE IMAGENES A TENER EN CUENTA ------------------------------------->
+<!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es normal-->
+<!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es muy grande-->
+<!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen no se ve bien en el contenido en la pagina usando la clase project-proyectos-->
+
+<body>
+    <div class="container proyecto">
+        <header>
+            <h1>INTEGRACIÓN DE DATOS EN TIEMPO REAL DESDE UNA API <br>
+                HACIA SQL SERVER USANDO SSIS</h1>
+            <br>
+        </header>
+        <main>
+            <section id="project-details">
+                <h2>I. ENTENDIENDO LOS DATOS Y LA FINALIDAD DEL PROYECTO</h2>
+                <p>
+                    Los datos en tiempo real se obtendrán desde la API de OpenWeatherMap, que proporciona datos
+                    meteorológicos en tiempo real, como temperatura, humedad, velocidad del viento, etc.
+                    <br>
+                    La finalidad de este proyecto es crear un proceso ETL en SSIS que capture, transforme y cargue datos
+                    en tiempo real desde una fuente de datos continua (como la API de OpenWeatherMap) de una ciudad en
+                    específico (o varias ciudades), a una base de datos SQL Server.
+                    <br>
+                </p>
+                <h2>II. DESARROLLO DEL PROYECTO</h2>
+                <h3>Paso 1: Obteniendo una API Key de OpenWeatherMap</h3>
+                <p>
+                    Como la data la extraeré de un API que pide una clave (API Key), necesitaré crear una cuenta en la
+                    Web que me la proporcionará.
+                    <br>
+                    Para ello me registré en la web de OpenWeatherMap
+                    (<a href="https://openweathermap.org/api" target="_blank">https://openweathermap.org/api</a>),
+                    y procedí a generar una nueva API Key que utilizará para la obtención de los Datos.
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\1.png"
+                    alt="Imagen 1 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 2: Creando Proyecto en SSIS</h3>
+                <p>
+                    Se creó el proyecto con Nombre: “INTEGRACION DATOS TIEMPO REAL” y un paquete SSIS llamado:
+                    “Integrando Data Tiempo Real con SSIS”.
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\2.png"
+                    alt="Imagen 2 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <h3>Paso 3: Configurando Variables en SSIS</h3>
+                <p>
+                    Crearé variables que se encargarán de extraer y almacenar los datos obtenidos del API. Las variables
+                    son:
+                    <br><br>
+                    • APIKey (String): Almacenará el API Key de OpenWeatherMap que obtuve creando la cuenta.<br>
+                    • City1 (String): Almacenará el nombre de una ciudad en específico (para este proyecto,
+                    "Ferreñafe").<br>
+                    • City2 (String): Almacenará el nombre de una ciudad en específico (para este proyecto,
+                    "Chiclayo").<br>
+                    • City3 (String): Almacenará el nombre de una ciudad en específico (para este proyecto,
+                    "Lambayeque").<br>
+                    • Country1 (String): Almacenará el país que pertenece la ciudad 1.<br>
+                    • Country2 (String): Almacenará el país que pertenece la ciudad 2.<br>
+                    • Country3 (String): Almacenará el país que pertenece la ciudad 3.<br>
+                    • Humidity1 (Int): Almacenará la humedad obtenida de la ciudad 1.<br>
+                    • Humidity2 (Int): Almacenará la humedad obtenida de la ciudad 2.<br>
+                    • Humidity3 (Int): Almacenará la humedad obtenida de la ciudad 3.<br>
+                    • Pressure1 (Int): Para la presión atmosférica obtenida de la ciudad 1.<br>
+                    • Pressure2 (Int): Para la presión atmosférica obtenida de la ciudad 2.<br>
+                    • Pressure3 (Int): Para la presión atmosférica obtenida de la ciudad 3.<br>
+                    • Temperature1 (Decimal): Almacenará la temperatura obtenida de la ciudad 1.<br>
+                    • Temperature2 (Decimal): Almacenará la temperatura obtenida de la ciudad 2.<br>
+                    • Temperature3 (Decimal): Almacenará la temperatura obtenida de la ciudad 3.<br>
+                    • WeatherDescription1 (String): Para la descripción del clima obtenida de la ciudad 1.<br>
+                    • WeatherDescription2 (String): Para la descripción del clima obtenida de la ciudad 2.<br>
+                    • WeatherDescription3 (String): Para la descripción del clima obtenida de la ciudad 3.<br>
+                    • WindSpeed1 (Decimal): Para la velocidad del viento obtenida de la ciudad 1.<br>
+                    • WindSpeed2 (Decimal): Para la velocidad del viento obtenida de la ciudad 2.<br>
+                    • WindSpeed3 (Decimal): Para la velocidad del viento obtenida de la ciudad 3.<br><br>
+
+                    Solo APIKey, City1, City2 y City3 tienen asignado un “Valor”, las demás variables lo dejaré vacío ya
+                    que se llenará en el Script. Si se requiere cambiar las ciudades se pueden cambiar modificando este
+                    apartado.
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\3.png"
+                    alt="Imagen 3 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 4: Componente de Tarea de Scripts.</h3>
+                <p>
+                    Emplearé el componente de “Tarea Script” y utilizaré C# como lenguaje de programación para la
+                    configuración de la obtención de datos desde la API.
+                    <br>
+                </p>
+                <br>
+                <p>
+                    Se agregan las Variables al Script:<br>
+                    - En la pestaña "ReadOnlyVariables", seleccioné las variables User::APIKey, User::City1,
+                    User::City2, User::City3. (Las variables que le coloqué un valor.)<br>
+                    - En la pestaña "ReadWriteVariables", seleccioné las demas variables variables (las demás variables
+                    que no se le colocó ningún Valor).
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\4.png"
+                    alt="Imagen 4 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Luego se da clic en "Editar Script..." para que se nos abrá una ventana donde podemos editar el
+                    código C#
+                </p>
+                <br>
+                <h3>Paso 5: Editando el Script con el código C#.</h3>
+                <p>
+                    Primero instalaré una librería que usaré en el código, la librería es Newtonsoft.Json:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\5.png"
+                    alt="Imagen 5 del Proyecto" class="project-proyectos">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\6.png"
+                    alt="Imagen 6 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Verificamos que aparezca referenciado la librería que se agregó:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\7.png"
+                    alt="Imagen 7 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <p>
+                    Luego escribí el código que llama a la API de OpenWeatherMap usando la API Key y 3 Ciudades, creamos
+                    las clases teniendo en cuando el JSON, luego extrae la temperatura, la humedad, la presión
+                    atmosférica, la velocidad del viento y la descripción del clima de cada ciudad brindada del JSON de
+                    respuesta y guarda los valores en las variables creadas en el SSIS.
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\8.png"
+                    alt="Imagen 8 del Proyecto" class="project-proyectos thumbnail">
+
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\9.png"
+                    alt="Imagen 9 del Proyecto" class="project-proyectos thumbnail">
+
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\10.png"
+                    alt="Imagen 10 del Proyecto" class="project-proyectos thumbnail">
+
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\11.png"
+                    alt="Imagen 11 del Proyecto" class="project-proyectos thumbnail">
+
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\12.png"
+                    alt="Imagen 12 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 6: Creando Tabla para almacenar los Datos.</h3>
+                <p>
+                    Crearé una Base de datos y una tabla en SQL Server donde se irán almacenando los datos extraídos del
+                    API:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\13.png"
+                    alt="Imagen 13 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Paso 7: Creando una Tarea Ejecutar SQL para insertar los datos a la Base de Datos.</h3>
+                <p>
+                    Ahora para el proceso de la carga de datos del JSON a una tabla en SQL Server utilicé el componente
+                    Tarea Ejecutar SQL para insertar los datos correspondientes a cada Ciudad.
+                    <br>
+                    Agregué la conexión a la Base de Datos y el comando SQL donde le pasaré las variables.
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\14.png"
+                    alt="Imagen 14 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    En Asignación de Variables colocamos todo lo relacionado a datos obtenidos para la ciudad 1.
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\15.png"
+                    alt="Imagen 15 del Proyecto" class="project-proyectos ">
+                <br>
+                <p>
+                    Se hizo el mismo proceso para las demás ciudades asignando las variables correspondientes para cada
+                    una:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\16.png"
+                    alt="Imagen 16 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 8: Error en la Ejecución y la solución al error.</h3>
+                <p>
+                    Al dar inicio a la ejecución del proyecto me salió el siguiente error:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\17.png"
+                    alt="Imagen 17 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\18.png"
+                    alt="Imagen 18 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Estuve investigando y este error indica que la referencia a la librería Newtonsoft.Json no está
+                    registrada en la GAC (Global Assembly Cache) por lo que se necesita registrarla para que pueda se
+                    ubicada por el proyecto y así ser usada, para ello abrimos nuevamente donde se escribió el código C#
+                    para buscar la ruta donde está la librería descargada.
+                    <br>
+                    Identifiqué la Ruta de la Libreria para poder copiarla:
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\19.png"
+                    alt="Imagen 19 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <p>
+                    Luego abrí Developer Command Prompt for VS 2022 y lo ejecuté como Administrador.
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\20.png"
+                    alt="Imagen 20 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    En la pantalla de comandos verificamos que no se encuentra registrada la Librería:<br>
+                    gacutil -l Newtonsoft.Json
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\21.png"
+                    alt="Imagen 21 del Proyecto" class="project-proyectos ">
+                <br>
+                <p>
+                    El número 0 indica que no se tiene librerías registradas en el GAC, para referenciarlo de forma
+                    global (No solo para el proyecto, por eso se usa gacutil):<br>
+                    gacutil -i "C:\Program Files\IIS\Microsoft Web Deploy V3\Newtonsoft.Json.dll"
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\22.png"
+                    alt="Imagen 22 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Paso 9: Ejecutando el proyecto.</h3>
+                <p>
+                    Una vez solucionado el error, al ejecutar el proyecto, lo hace sin ningún inconveniente:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\23.png"
+                    alt="Imagen 23 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    Verifico que se hizo el correcto registro en la Base de datos:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\24.png"
+                    alt="Imagen 24 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Paso 10: Implementando el proyecto de Integration Services.</h3>
+                <p>
+                    Una vez tenemos el proyecto, empezaré con el despliegue para que aparezca en SQL Server y poder
+                    crear una Tarea Programada en el Agente de SQL Server, para ello lo implementé:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\25.png"
+                    alt="Imagen 25 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\26.png"
+                    alt="Imagen 26 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\27.png"
+                    alt="Imagen 27 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    En SQL Server, en el apartado de Catálogos de Integration Services (Previamente se tuvo que crear un
+                    nuevo catálogo), ya aparece
+                    el proyecto:
+                </p>
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\28.png"
+                    alt="Imagen 28 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <h3>Paso 11: Creando una tarea programada automática con Agente SQL Server.</h3>
+                <p>
+                    Cree un nuevo Job (trabajo) en SQL Server que ejecute el proyecto Implementado anteriormente:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\29.png"
+                    alt="Imagen 29 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\30.png"
+                    alt="Imagen 30 del Proyecto" class="project-proyectos">
+                <br>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\31.png"
+                    alt="Imagen 31 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Programando para que se ejecute automáticamente cada 30 segundos:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\32.png"
+                    alt="Imagen 32 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Se ejecutará automáticamente, se observa la hora de la primera ejecución:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\33.png"
+                    alt="Imagen 33 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    En la segunda ejecución se visualiza que sucedió 30 segundos después tal como lo programé, pero se
+                    puede reducir ese tiempo si se desea:
+                    <br>
+                </p>
+                <img src="./Imagenes\SQL Server Integration Services (SSIS)\Datos Tiempo Real API-SQL Server\34.png"
+                    alt="Imagen 34 del Proyecto" class="project-proyectos">
+                <br>
+                <h2>III. CONCLUSIÓN</h2>
+                <p>
+                    Se logró extraer datos de una API en Tiempo real y almacenarlos en SQL Server usando SSIS, con una tarea
+                    automatizada cada 30 segundos.
+                </p>
+            </section>
+
+            <div class="descargar">
+                <section id="descarga">
+                    <h2>Si desea revisar el proyecto completo y más detallado, se encuentra en mi repositorio de GitHub:</h2>
+                    <br>
+                    <div class="descarga-item">
+                        <button type="button" class="boton-GitHub" onclick="proyectoGitHub2()">
+                            <img src="./Imagenes/Principal/github.png" alt="Descargar archivo"> Proyecto en GitHub
+                        </button>
+                        <button type="button" class="boton-descargar" onclick="descargarProyecto2()">
+                            <img src="./Imagenes/Principal/boton_descargar.png" alt="Descargar archivo"> Descarga
+                            Directa
+                        </button>
+                    </div>
+
+                </section>
+            </div>
+
+
+        </main>
+    </div>
+    <!-- Ventana modal para el visor de imagen -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
