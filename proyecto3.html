@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Para hacer la Web Responsive-->
+    <title>CARGA INCREMENTAL Y AUDITORIA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-------------------ESTILOS CSS PARA CLASES DE IMAGENES A TENER EN CUENTA ------------------------------------->
+<!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es normal-->
+<!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es muy grande-->
+<!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen no se ve bien por ser muy pequeña en el contenido en la pagina usando la clase project-proyectos-->
+<!--clase: thumbnail2>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen QUIERO que se vea pequeña porque es muy grande pero que se pueda abrir al dar clic-->
+
+<body>
+    <div class="container proyecto">
+        <header>
+            <h1>PROYECTO DE CARGA INCREMENTAL DE DATOS <br>
+                Y AUDITORÍA CON SSIS</h1>
+            <br>
+        </header>
+        <main>
+            <section id="project-details">
+                <h2>I. ENTENDIENDO LOS DATOS Y LA FINALIDAD DEL PROYECTO</h2>
+                <h3>1. Fuente de datos:</h3>
+                <p>
+                    Se usó un dataset que contiene información sobre ventas, beneficios, descuentos, y otros datos
+                    relacionados con una tienda minorista ficticia. Incluye datos como fecha de pedido, categoría de
+                    producto, región, etc.
+                    <br>
+                    Los datos se obtuvieron del repositorio de Kaggle:
+                    (<a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final "
+                        target="_blank">https://www.kaggle.com/datasets/vivek468/superstore-dataset-final </a>).
+                    <br>
+                    La finalidad de este proyecto, empleando SSIS, es lograr que los datos provenientes de una fuente
+                    (en este caso, un archivo CSV) se integren en la tabla Ventas_Destino de SQL Server sin duplicar
+                    registros. Se insertarán únicamente los datos nuevos y se actualizarán aquellos registros existentes
+                    en caso de modificaciones en la fuente. Además, se implementará una auditoría de cambios que
+                    registrará, en la tabla Ventas_Auditoria, detalles fundamentales como la fecha de actualización, el
+                    valor anterior del dato, la columna modificada y, a modo de ejemplo, el usuario junto con su IP o el
+                    nombre del equipo que realizó la modificación.
+                </p>
+                <br>
+                <h3>2. Columnas:</h3>
+                <p>
+                    El datased contiene 21 columnas las cuales se detallan a continuación:
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/Columnas.png"
+                    alt="Imagen Columnas del Proyecto" class="project-proyectos-pequeño thumbnail2">
+                <br>
+                <h2>II. DESARROLLO DEL PROYECTO</h2>
+                <h3>Paso 1: Preparar la Base de Datos y las Tablas</h3>
+                <p>
+                    Se crearon tres tablas:
+                    <br>
+                    - Ventas_Origen (tabla donde llegan los datos nuevos).<br>
+                    - Ventas_Destino (almacena datos consolidados sin duplicados).<br>
+                    - Ventas_Auditoria (registra los cambios en los datos).<br>
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/1.png"
+                        alt="Imagen 1 del Proyecto" class="project-proyectos thumbnail">
+                </p>
+
+                <br>
+                <h3>Paso 2: Creando un proyecto en SSIS.</h3>
+                <p>
+                    Se creó un proyecto en SSIS y se utilizó el componente Data Flow Task.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/2.png"
+                    alt="Imagen 2 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Paso 3: Configuración del Origen CSV</h3>
+                <p>
+                    Se configuró el origen de datos para leer desde el archivo CSV.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/3.png"
+                    alt="Imagen 3 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 4: Conversión de Tipos de Datos.</h3>
+                <p>
+                    Se utilizó el componente Data Conversion para asegurar compatibilidad con SQL Server.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/4.png"
+                    alt="Imagen 4 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 5: Carga de Datos en Ventas_Origen.</h3>
+                <p>
+                    Se configuró el destino inicial en la tabla Ventas_Origen.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/5.png"
+                    alt="Imagen 5 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 6: Procesamiento de Datos y Auditoría.</h3>
+                <p>
+                    Se implementó una consulta SQL para:<br>
+                    <br>
+                    a) Comparar Ventas_Origen con Ventas_Destino.<br>
+                    b) Registrar cambios en una tabla temporal.<br>
+                    c) Insertar los cambios en Ventas_Auditoria.<br>
+                    d) Actualizar datos modificados en Ventas_Destino.<br>
+                    e) Insertar datos nuevos en Ventas_Destino.<br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/6.png"
+                    alt="Imagen 6 del Proyecto" class="project-proyectos thumbnail">
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/7.png"
+                    alt="Imagen 7 del Proyecto" class="project-proyectos thumbnail">
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/8.png"
+                    alt="Imagen 8 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 7: Configuración de la Tarea Ejecutar SQL.</h3>
+                <p>
+                    Se agregó la consulta SQL en el componente Execute SQL Task.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/9.png"
+                    alt="Imagen 9 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 8: Limpieza de la Tabla Ventas_Origen.</h3>
+                <p>
+                    Se eliminan los datos de Ventas_Origen para evitar duplicados en la próxima ejecución.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/10.png"
+                    alt="Imagen 10 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 9: Ejecución y Verificación de Datos.</h3>
+                <br>
+                <p>
+                    1. Se cargaron 4140 registros iniciales.<br>
+                    2. Se verificó que las tablas en SQL Server estaban vacías antes de ejecutar el proceso.<br>
+                    3. Se ejecutó el proyecto y se verificaron los datos insertados.<br>
+                    4. Se agregaron 60 nuevos registros y se modificaron datos en 2 registros existentes.<br>
+                    5. Se volvió a ejecutar el proceso y se confirmó que Ventas_Auditoria registró los cambios.<br>
+                    6. Se ejecutó nuevamente el mismo proceso sin agregar o modificar nada para comprobar que no se
+                    duplicaron registros.<br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/11.png"
+                    alt="Imagen 11 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 10: Creación de una Tarea Programada.</h3>
+                <p>
+                    Se programó la ejecución automática del proceso cada 2 horas mediante SQL Server Agent.
+                    Para ello primero se implementó el proyecto en Integration Services Catalogs y luego se creó el Job
+                    en SQL Server Agent.
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/12.png"
+                    alt="Imagen 12 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/13.png"
+                    alt="Imagen 13 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Carga Incremental y Auditoria/14.png"
+                    alt="Imagen 14 del Proyecto" class="project-proyectos-pequeño">
+                <br>
+                <h2>III. CONCLUSIÓN</h2>
+                <p>
+                    El proceso de este proyecto automatiza la carga incremental de datos sin duplicaciones y mantiene un registro de
+                    auditoría de los cambios en la base de datos.
+                    <br>
+                </p>
+            </section>
+
+            <div class="descargar">
+                <section id="descarga">
+                    <h2>Si desea revisar el proyecto completo y más detallado, se encuentra en mi repositorio de GitHub:
+                    </h2>
+                    <br>
+                    <div class="descarga-item">
+                        <button type="button" class="boton-GitHub" onclick="proyectoGitHub3()">
+                            <img src="./Imagenes/Principal/github.png" alt="Descargar archivo"> Proyecto en GitHub
+                        </button>
+                        <button type="button" class="boton-descargar" onclick="descargarProyecto3()">
+                            <img src="./Imagenes/Principal/boton_descargar.png" alt="Descargar archivo"> Descarga
+                            Directa
+                        </button>
+                    </div>
+
+                </section>
+            </div>
+
+
+        </main>
+    </div>
+    <!-- Ventana modal para el visor de imagen -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
