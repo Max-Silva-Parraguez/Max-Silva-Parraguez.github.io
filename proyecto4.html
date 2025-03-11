@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Para hacer la Web Responsive-->
+    <title>CARGA INCREMENTAL Y AUDITORIA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-------------------ESTILOS CSS PARA CLASES DE IMAGENES A TENER EN CUENTA ------------------------------------->
+<!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es normal-->
+<!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es muy grande-->
+<!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen no se ve bien por ser muy pequeña en el contenido en la pagina usando la clase project-proyectos-->
+<!--clase: thumbnail2>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen QUIERO que se vea pequeña porque es muy grande pero que se pueda abrir al dar clic-->
+
+<body>
+    <div class="container proyecto">
+        <header>
+            <h1>PROYECTO DE INTEGRACIÓN Y ANÁLISIS DE<br>
+                DATOS GEOGRÁFICOS USANDO SSIS</h1>
+        </header>
+        <main>
+            <section id="project-details">
+                <h2>I. INTRODUCCIÓN</h2>
+                <p>
+                    Este proyecto tiene como propósito integrar, transformar y analizar datos geográficos mediante un
+                    proceso ETL implementado con SSIS, SQL Server y herramientas de apoyo como QGIS y C#. Se trabajó con
+                    datos espaciales de la Ciudad de México, utilizando archivos Shapefile y datos GPS de viajes en
+                    taxi comprendidos entre junio del 2016 y julio del 2017, con el fin de generar análisis útiles para
+                    la toma de decisiones relacionadas con movilidad urbana.
+                    <br>
+                </p>
+                <h2>II. FUENTE DE DATOS</h2>
+                <p>
+                    Los archivos Shapefile fueron descargados desde Geofabrik
+                    (<a href="https://download.geofabrik.de/north-america.html"
+                        target="_blank">https://download.geofabrik.de/north-america.html</a>) y los datos GPS desde
+                    Kaggle
+                    (<a href="https://www.kaggle.com/datasets/mnavas/taxi-routes-for-mexico-city-and-quito?select=mex_clean.csv"
+                        target="_blank">https://www.kaggle.com/datasets/mnavas/taxi-routes-for-mexico-city-and-quito?select=mex_clean.csv</a>).
+                </p>
+                <h2>III. OBJETIVO DEL PROYECTO</h2>
+                <p>
+                    El objetivo fue desarrollar un proceso ETL completo en SSIS para integrar datos geográficos y de
+                    movilidad, limpiarlos y analizarlos, obteniendo información clave sobre patrones de transporte en la
+                    Ciudad de México.
+                </p>
+                <h2>IV. DESARROLLO DEL PROYECTO</h2>
+                <h3>Paso 1: Exploración de Shapefiles:</h3>
+                <p>
+                    Se utilizaron herramientas como QGIS para visualizar y comprender el contenido de los archivos
+                    Shapefile, identificando capas relevantes como vías, puntos de interés, zonas naturales, tráfico,
+                    transporte, etc.<br>
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/1.png"
+                        alt="Imagen 1 del Proyecto" class="project-proyectos thumbnail">
+
+                </p>
+                <br>
+                <h3>Paso 2: Exploración de Datos GPS:</h3>
+                <p>
+                    Se revisó el archivo .CSV de rutas de taxi, identificando columnas relevantes:
+                    <br>
+                </p>
+                <br>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/2.png"
+                    alt="Imagen 2 del Proyecto" class="thumbnail2">
+                <br>
+                <h3>Paso 3: Preparación de Base de Datos:</h3>
+                <p>
+                    Se crearon dos bases de datos: "DATOS_GEOGRAFICOS" para almacenar todos los datos crudos, y
+                    "DATOS_GEOGRAFICOS_LIMPIOS" para guardar solo los datos filtrados y listos para análisis.
+                    <br>
+                    Tablas y columnas para pasar los datos en bruto:
+                    <br><br>
+                    Datos de los Shapefiles:
+                    <br><br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/3.png"
+                    alt="Imagen 3 del Proyecto" class="thumbnail2">
+                <br>
+                <p>
+                    Datos del archivo GPS (Tabla TaxiViajes_GPS):
+                    <br><br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/4.png"
+                    alt="Imagen 4 del Proyecto" class="thumbnail2">
+                <br>
+                <h3>Paso 4: Inserción de Datos Shapefiles:</h3>
+                <p>
+                    Se utilizó C# y bibliotecas específicas para transformar los archivos .shp en tablas SQL Server,
+                    automatizando el proceso con tareas de ejecución dentro de SSIS.<br>
+                    <br>
+                    Por ejemplo, para el Shapefile Agua, el código en C# sería:
+                    <br>
+                </p>
+
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/5.png"
+                    alt="Imagen 5 del Proyecto" class="project-proyectos thumbnail">
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/6.png"
+                    alt="Imagen 6 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Para que funcione el código, se necesitan instalar dos paquetes dentro del Administrador de Paquetes
+                    de NuGet:
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/7.png"
+                    alt="Imagen 7 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    Lo mismo se realiza para cada una de las tablas de los Shapefile's, y se ejecuta todas las tareas de
+                    Flujo de Datos.
+                    <br>
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/8.png"
+                        alt="Imagen 8 del Proyecto" class="project-proyectos thumbnail">
+                    <br>
+                </p>
+                <h3>Paso 5: Inserción de Datos GPS:</h3>
+                <p>
+                    Se emplearon tareas de origen plano, transformación (columna derivada) y un destino OLE DB en SSIS
+                    para
+                    cargar los datos GPS. Se convirtieron las coordenadas al tipo GEOGRAPHY para análisis espacial.
+                    <br>
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/9.png"
+                    alt="Imagen 9 del Proyecto" class="thumbnail2">
+
+                <br>
+                <h3>Paso 6: Limpieza y Filtrado de Datos:</h3>
+                <p>
+                    Como los datos ingresados en la primera base de datos no los utilizaré todos, se establecieron
+                    reglas lógicas para descartar registros incoherentes (duraciones muy cortas o
+                    largas, distancias fuera de rango, etc.). Estos datos se separaron en archivos CSV para revisión,
+                    para ello haré un proceso de ETL hacia otra base de datos con solo las columnas que
+                    utilizaré y utilizando datos limpios. Para ello creé una base de datos llamada
+                    “DATOS_GEOGRAFICO_LIMPIOS”, ahí almacenaré todas las tablas que se utilizarán para diversos
+                    análisis.<br>
+                    <br>
+                    Se desea exportar datos que resuelvan las siguientes interrogantes:<br><br>
+                    a) ¿Cuántos taxis recogen pasajeros cerca de puntos de interés (hoteles, restaurantes, estaciones de
+                    transporte, parques, ¿etc.)?<br>
+                    b) ¿Qué porcentaje de los viajes comienzan o terminan cerca de una estación de transporte?<br>
+                    c) ¿Cuáles son las zonas con más viajes de taxi en una hora específica del día?<br>
+                    d) ¿Cuál es el que contiene mayor cantidad de viajes registrados entre Hoteles y Restaurantes?<br>
+                    e) ¿Cuáles son las carreteras más utilizadas para iniciar un viaje?<br>
+                    f) ¿Cuáles son los lugares de interés con más viajes de taxi?<br>
+                    g) ¿Cuáles son las ciudades con mayor actividad de taxis?<br>
+                    h) Listado de viajes que empiezan cerca de algún área natural.<br>
+                    i) ¿Cuál es la velocidad promedio de los viajes en diferentes tipos de vía en Km/h?<br>
+                    j) ¿Cuántos viajes terminan en Hospitales?<br>
+                    <br>
+                    Las tablas de origen de los Shapefiles con datos útiles que servirán para este análisis son:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/10.png"
+                    alt="Imagen 10 del Proyecto" class="project-proyectos">
+                <br>
+                <p>
+                    Y las columnas de los datos del GPS que se usarán son:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/11.png"
+                    alt="Imagen 11 del Proyecto" class="project-proyectos">
+                <br>
+                <h3>Paso 7: Carga de Datos Limpios:</h3>
+                <p>
+                    Se insertaron datos ya filtrados en la base de datos limpia. También se realizaron conversiones de
+                    geometría a geografía en SQL Server.
+                    <br>
+                    Pasando datos de los Shapefiles a una nueva BD:
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/12.png"
+                    alt="Imagen 12 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Pasando datos del GPS a una nueva BD:
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/13.png"
+                    alt="Imagen 13 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <h3>Paso 8: Análisis de Datos:</h3>
+                <p>
+                    Se ejecutaron múltiples consultas SQL para responder preguntas específicas: zonas con mayor tráfico,
+                    puntos de interés con más actividad, velocidad promedio por tipo de vía, etc. Cada análisis fue
+                    exportado a CSV mediante SSIS.
+                    <br>
+                    Por ejemplo, para la pregunta:<br>
+                    a) ¿Cuántos taxis recogen pasajeros cerca de puntos de interés (hoteles, restaurantes, estaciones de
+                    transporte, parques, ¿etc.)?
+                    <br>
+                    <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/14.png"
+                        alt="Imagen 14 del Proyecto" class="project-proyectos thumbnail">
+                    <br>
+                    Y el destino es un archivo CSV.
+                    <br>
+                    Se ejecuta todos las Tareas de Flujo de Datos.
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/15.png"
+                    alt="Imagen 15 del Proyecto" class="project-proyectos thumbnail">
+                <br>
+                <p>
+                    Datos almacenados en CSV's:
+                    <br>
+                    <br>
+                </p>
+                <img src="./Imagenes/SQL Server Integration Services (SSIS)/Analisis Datos Geograficos/16.png"
+                    alt="Imagen 16 del Proyecto" class="thumbnail2">
+                    <br>
+                <h2>V. RESULTADOS Y CONCLUSIONES DEL ANÁLISIS</h2>
+                <p>
+                    - Los puntos de interés con más viajes fueron los restaurantes, seguidos de tiendas y locales de
+                    comida rápida.<br>
+                    - El 41.64% de los viajes iniciaron cerca de una estación de transporte y el 38.05% terminaron cerca
+                    de una.<br>
+                    - Las zonas con más viajes a las 8:00 a.m. mostraron un patrón de movilidad concentrado en áreas
+                    específicas.<br>
+                    - Se observa que el que contiene mayor cantidad de viajes son realizados por la Clase Restaurant.<br>
+                    - La Avenida Insurgentes Sur fue la vía más utilizada como punto de partida.<br>
+                    - El Oxxo resultó ser uno de los lugares de interés con más actividad de taxis.<br>
+                    - La Ciudad de México concentró la mayoría de los inicios de viaje.<br>
+                    - Se identificaron numerosos viajes que iniciaron cerca de zonas naturales.<br>
+                    - Se obtuvieron velocidades promedio por tipo de vía, útiles para análisis de tráfico.<br>
+                    - Se detectaron más de 400 viajes que terminaron cerca de hospitales.
+                    <br>
+                </p>
+                <h2>VI. CONCLUSIÓN GENERAL DEL PROYECTO</h2>
+                <p>
+                    Este proyecto me permitió darme cuenta de cómo el uso de datos espaciales junto con herramientas de
+                    análisis puede aportar información muy valiosa para tomar decisiones en temas como el transporte
+                    urbano, la planificación territorial o incluso para entender mejor cómo se mueve la ciudad y cómo se
+                    podría mejorar la movilidad.
+                    <br>
+                </p>
+            </section>
+
+            <div class="descargar">
+                <section id="descarga">
+                    <h2>Si desea revisar el proyecto completo y más detallado, se encuentra en mi repositorio de GitHub:
+                    </h2>
+                    <br>
+                    <div class="descarga-item">
+                        <button type="button" class="boton-GitHub" onclick="proyectoGitHub4()">
+                            <img src="./Imagenes/Principal/github.png" alt="Descargar archivo"> Proyecto en GitHub
+                        </button>
+                        <button type="button" class="boton-descargar" onclick="descargarProyecto4()">
+                            <img src="./Imagenes/Principal/boton_descargar.png" alt="Descargar archivo"> Descarga
+                            Directa
+                        </button>
+                    </div>
+
+                </section>
+            </div>
+
+
+        </main>
+    </div>
+    <!-- Ventana modal para el visor de imagen -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

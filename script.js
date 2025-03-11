@@ -65,7 +65,10 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-//Cando se da clic en botón de Proyecto en GitHub Dependiendo el Proyecto
+//Cuando se da clic en botón de Proyecto en GitHub Dependiendo el Proyecto
+
+//------------PROYECTOS SSIS-----------------//
+
 //PROYECTO DATAMART ACCIDENTS
 function proyectoGitHub1() {
     window.open('https://github.com/Max-Silva-Parraguez/Project-SSIS-DataMart-Accidents', '_blank');
@@ -94,4 +97,14 @@ function proyectoGitHub3() {
 //Cando se da clic en botón de Descarga Directa
 function descargarProyecto3() {
     window.open('https://github.com/Max-Silva-Parraguez/Project-SSIS-Incremental-Loading-and-Auditing/archive/refs/heads/main.zip', '_blank');
+}
+
+//PROYECTO INTEGRACIÓN Y ANÁLISIS DE DATOS GEOGRÁFICOS
+function proyectoGitHub4() {
+    window.open('https://github.com/Max-Silva-Parraguez/Project-SSIS-INTEGRATION-AND-ANALYSIS-OF-GEOGRAPHIC-DATA', '_blank');
+}
+
+//Cando se da clic en botón de Descarga Directa
+function descargarProyecto4() {
+    window.open('https://github.com/Max-Silva-Parraguez/Project-SSIS-INTEGRATION-AND-ANALYSIS-OF-GEOGRAPHIC-DATA/archive/refs/heads/main.zip', '_blank');
 }
