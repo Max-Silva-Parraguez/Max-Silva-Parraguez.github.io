@@ -1,6 +1,0 @@
-Solo subir los cambios al GitHub de:
-
-1. index.html
-2. proyecto(El # de proyecto que corresponda).html
-3. styles.css (Si es que se agregó algún estilo)
-4. script.js (Si es que se agregó alguna funcionalidad)
