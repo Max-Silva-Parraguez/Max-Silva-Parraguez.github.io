@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Para hacer la Web Responsive-->
+    <title>DATAMART CON SSIS</title>
+    <link rel="icon" href="../Imagenes/Principal/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<!-------------------ESTILOS CSS PARA CLASES DE IMAGENES A TENER EN CUENTA ------------------------------------->
+<!--clase: project-proyectos>>> la imagen no se abre, no cambia el puntero y da un 75% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es normal-->
+<!--clase: project-proyectos-pequeño>>> la imagen no se abre, no cambia el puntero y da un 35% de tamaño de la imagen, se utiliza cuando el tamaño original de la imagen es muy grande-->
+<!--clase: thumbnail>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen no se ve bien por ser muy pequeña en el contenido en la pagina usando la clase project-proyectos-->
+<!--clase: thumbnail2>>> la imagen si se abre, si cambia el puntero y al abrirlo ocupa toda la pantalla, se utiliza cuando una imagen QUIERO que se vea pequeña porque es muy grande pero que se pueda abrir al dar clic-->
+
+<body>
+    <div class="container proyecto">
+        <header>
+            <h1>ANÁLISIS DE CARTERA CREDITICIA </h1>
+            <h2>Análisis mensual y por sucursal (tendencia, cobranza y morosidad)</h2>
+
+        </header>
+        <main>
+            <section id="project-details">
+                <h2>I. CONTEXTO DEL PROYECTO</h2>
+                <p>
+                    En este proyecto desarrollé un dashboard en Power BI para analizar el desempeño de una cartera de
+                    créditos durante el año 2020.
+                    El objetivo principal fue evaluar el comportamiento de la colocación de créditos, el nivel de
+                    recuperación y la exposición al riesgo, permitiendo identificar meses y sucursales con mejor
+                    desempeño financiero.
+                    <br>
+                    <br>
+
+                </p>
+                <h2>II. ESTRUCTURA DE LA BASE DE DATOS</h2>
+                <p>
+                    La base de datos utilizada se encontraba previamente agrupada a nivel mensual y por sucursal. Cada
+                    registro contiene información resumida de los créditos originados en una fecha específica.<br>
+                    Las variables principales fueron:<br><br>
+                    • Fecha inicio de crédito: representa la fecha exacta de inicio del crédito.<br>
+                    • B_Mes: funciona como fecha representativa del mes (fecha de corte) para facilitar el análisis
+                    agregado mensual.<br>
+                    • Sucursal: sucursal donde se colocó el crédito.<br>
+                    • Adeudo (Con adeudo / Sin adeudo): Clasificación del estado del cliente.<br>
+                    • Ventas Totales (Colocación total): Monto total prestado.<br>
+                    • Número de clientes: Cantidad de clientes que adquirieron créditos.<br>
+                    • Saldo Pendiente (Deuda actual): Capital que aún no ha sido recuperado.<br>
+                    • Pagos Totales: Monto total pagado por los clientes.<br>
+                    • Número de créditos: Total de créditos otorgados.<br><br>
+
+                <h2>III. OBJETIVO DEL DASHBOARD</h2>
+                <p>
+                    El dashboard fue diseñado para responder tres preguntas estratégicas:<br><br>
+                    1. ¿Cuánto capital se está colocando (prestando) mensualmente?<br>
+                    2. ¿Qué porcentaje del capital ha sido recuperado?<br>
+                    3. ¿Cuál es el nivel de exposición o saldo pendiente en la cartera?<br><br>
+                </p>
+                <h2>IV. VISTA INTERACTIVA DEL DASHBOARD</h2>
+                <p>
+                    A continuación, se presenta el dashboard interactivo que resume el crecimiento, la recuperación y el
+                    nivel de riesgo de la cartera crediticia.
+                </p>
+                <br>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                    <iframe
+                        src="https://app.powerbi.com/view?r=eyJrIjoiOGM0Y2ExYmEtN2ZkMi00OTU2LWFiYmYtMDkzZjQ3OGM4YzU4IiwidCI6ImVhNzA5NDAxLTc5MWEtNDBkYS1hYTc5LTk3Y2Y1ZmIwZmU3OCJ9"
+                        frameborder="0" allowFullScreen="true"
+                        style="position:absolute; top:0; left:0; width:100%; height:100%;">
+                    </iframe>
+                </div>
+                <br>
+                <h2>V. MÉTRICAS CONSTRUIDAS EN DAX</h2>
+                <p>
+                    Para el análisis se desarrollaron medidas clave:<br><br>
+                    • % Recuperación = Pagos Totales / Ventas Totales : Permite medir si la cartera está generando
+                    rentabilidad.<br>
+                    <img src="../Imagenes/Power BI/1.Analisis de Cartera Crediticia/1.png" alt="Imagen 1 del Proyecto"
+                        class="project-proyectos-pequeño">
+                    <br>
+                    • % Exposición (Saldo Pendiente) = Adeudo Actual / Ventas Totales : Indica qué proporción del
+                    capital colocado aún está en riesgo.<br>
+                    <img src="../Imagenes/Power BI/1.Analisis de Cartera Crediticia/2.png" alt="Imagen 2 del Proyecto"
+                        class="project-proyectos">
+                    <br>
+                    • % Clientes con Adeudo : Mide el porcentaje de clientes que aún presentan saldo pendiente.<br>
+                    <img src="../Imagenes/Power BI/1.Analisis de Cartera Crediticia/3.png" alt="Imagen 3 del Proyecto"
+                        class="project-proyectos-pequeño">
+                    <br>
+                    Además, se gestionó el contexto de filtros utilizando slicers (filtros) de mes y sucursal, afectando
+                    únicamente las tarjetas KPI para permitir análisis dinámico, mientras que las gráficas históricas
+                    permanecen sin filtros para mantener una visión estratégica global.
+                    <br>
+                    <br>
+                </p>
+
+                <h2>VI. INSIGHTS RELEVANTES</h2>
+                <p>
+                    Con la data que analizamos:<br><br>
+                    📊 Diciembre fue el mes con mayor colocación (284 Mill.): Eso indica fuerte actividad comercial.<br>
+                    📊 Marzo presentó el mayor porcentaje de exposición (pagos pendientes) (6.03%): Eso sugiere mayor
+                    riesgo relativo en ese periodo.<br>
+                    📊 Globalmente, los pagos superan la colocación: Eso indica modelo rentable (recuperación con
+                    intereses).<br>
+                    📊 Las sucursales top tienen niveles similares de exposición (4% en promedio): Eso indica control
+                    relativamente homogéneo del riesgo.
+                    <br>
+                    <br>
+                </p>
+
+                <h2>VII. CONCLUSIONES DEL PROYECTO</h2>
+                <p>
+                    Este proyecto nació de una pregunta muy simple:<br><br>
+
+                    ¿La empresa está creciendo de manera saludable o está asumiendo demasiado riesgo al prestar
+                    dinero?<br><br>
+
+                    Al analizar los datos de la cartera crediticia durante 2020, se puede ver que la empresa aumentó su
+                    colocación de créditos a lo largo del año, con meses especialmente fuertes como diciembre.<br>
+
+                    Sin embargo, crecer no siempre significa estar bien. Lo importante era entender si ese crecimiento
+                    estaba acompañado de una recuperación adecuada del dinero prestado.<br><br>
+
+                    Los resultados muestran que:<br>
+
+                    El dinero que los clientes han pagado supera el total que se colocó en créditos.<br>
+
+                    El saldo pendiente se mantiene en niveles estables.<br>
+
+                    No hay sucursales que presenten un riesgo fuera de lo normal.<br>
+
+                    En otras palabras, la empresa no solo está prestando más dinero, sino que lo está recuperando de
+                    forma eficiente.<br><br>
+
+                    La historia que cuentan los datos es clara:
+                    El crecimiento de la cartera es sostenible y el nivel de riesgo está bajo control.<br>
+
+                    Este proyecto demuestra cómo, a través del análisis de datos, se puede evaluar si un negocio está
+                    creciendo con equilibrio o si está comprometiendo su estabilidad financiera.
+                    <br>
+                </p>
+            </section>
+
+            <div class="descargar">
+                <section id="descarga">
+                    <h2>Si desea revisar el proyecto completo y más detallado, se encuentra en mi repositorio de GitHub:
+                    </h2>
+                    <br>
+                    <div class="descarga-item">
+                        <button type="button" class="boton-GitHub" onclick="POWER_BI_proyectoGitHub1()">
+                            <img src="../Imagenes/Principal/github.png" alt="Descargar archivo"> Proyecto en GitHub
+                        </button>
+                        <button type="button" class="boton-descargar" onclick="POWER_BI_descargarProyecto1()">
+                            <img src="../Imagenes/Principal/boton_descargar.png" alt="Descargar archivo"> Descarga
+                            Directa
+                        </button>
+                    </div>
+                </section>
+            </div>
+            <div class="autor">
+                <p>
+                    Autor: Ing. Max Silva Parraguez
+                </p>
+            </div>
+        </main>
+    </div>
+    <!-- Ventana modal para el visor de imagen -->
+    <div id="imageModal" class="modal">
+        <span class="close" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption"></div>
+    </div>
+    <script src="../script.js"></script>
+</body>
+
+</html>
